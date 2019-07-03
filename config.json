@@ -1,0 +1,21 @@
+{
+    "name": "S620782-CustomPieChartFilterByDefectsAndTestSets",
+    "className": "CustomApp",
+    "server": "https://rally1.rallydev.com",
+    "sdk": "2.1",
+    "javascript": [
+        "App.js",
+        "Utils.js",
+        "Calculator.js",
+        "bar/Calculator.js",
+        "bar/Chart.js",
+        "column/Calculator.js",
+        "column/Chart.js",
+        "pie/Calculator.js",
+        "pie/Chart.js",
+        "Settings.js"
+    ],
+    "css": [
+        "app.css"
+    ]
+}
