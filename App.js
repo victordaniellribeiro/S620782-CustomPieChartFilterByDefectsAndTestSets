@@ -198,7 +198,7 @@ Ext.define('CustomApp', {
         Ext.create('Rally.data.wsapi.Store', {
             model: 'Defect',
             autoLoad: true,
-            fetch: ['Name', 'ObjectID', 'FormattedID', 'PlanEstimate', 'Environment'],
+            fetch: ['Name', 'ObjectID', 'FormattedID', 'PlanEstimate', 'Environment', 'Release'],
             context: {
                 projectScopeUp: false,
                 projectScopeDown: true,
@@ -226,12 +226,12 @@ Ext.define('CustomApp', {
 
         var deferred = Ext.create('Deft.Deferred');
 
-        var filter = [];
+        var filter = this._getCustomFilters();
 
         Ext.create('Rally.data.wsapi.Store', {
             model: 'TestSet',
             autoLoad: true,
-            fetch: ['Name', 'ObjectID', 'FormattedID', 'PlanEstimate'],
+            fetch: ['Name', 'ObjectID', 'FormattedID', 'PlanEstimate', 'Release'],
             context: {
                 projectScopeUp: false,
                 projectScopeDown: true,
@@ -253,6 +253,8 @@ Ext.define('CustomApp', {
 
 
     _getFilter: function() {
+        var customFilters = this._getCustomFilters();
+
         var filter;
 
         if (this._includeProduction) {
@@ -272,7 +274,25 @@ Ext.define('CustomApp', {
             filter = [];
         }
 
+
+        if (!filter || filter.length === 0) {
+            return customFilters;
+        } else {
+            filter = customFilters.and(filter);
+        }
+
+        console.log('final filter', filter);
+        console.log('final filter string', filter.toString());
+
         return filter;
+    },
+
+
+    _getCustomFilters: function() {
+        console.log('filters: currentCustom:', Ext.getCmp('panelGraph').items.get(1).currentCustomFilter.filters);
+        var customFilters = Ext.getCmp('panelGraph').items.get(1).currentCustomFilter.filters[0];
+
+        return customFilters;
     },
 
 
@@ -373,6 +393,7 @@ Ext.define('CustomApp', {
         this.down('#panelGraph').add(gridBoardConfig);
 
         console.log('comp', Ext.getCmp('panelGraph'));
+
 
         // this.add(gridBoardConfig);
     },
@@ -504,6 +525,7 @@ Ext.define('CustomApp', {
     },
 
     _getFilters: function() {
+        console.log('get filtes', this.getContext(), this.getContext().getTimeboxScope());
         var queries = [],
             timeboxScope = this.getContext().getTimeboxScope();
         if (this.getSetting('query')) {
