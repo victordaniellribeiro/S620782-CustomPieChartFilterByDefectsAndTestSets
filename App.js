@@ -525,7 +525,7 @@ Ext.define('CustomApp', {
     },
 
     _getFilters: function() {
-        console.log('get filtes', this.getContext(), this.getContext().getTimeboxScope());
+        console.log('get filters', this.getContext(), this.getContext().getTimeboxScope());
         var queries = [],
             timeboxScope = this.getContext().getTimeboxScope();
         if (this.getSetting('query')) {
