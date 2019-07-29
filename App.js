@@ -60,23 +60,23 @@ Ext.define('CustomApp', {
             id: 'panelGraph',
             // title: 'Filter:',
             // flex: 3,
-            // height: 100,
             align: 'stretch',
             bodyPadding: 10,
             items: [{
                 xtype: 'fieldcontainer',
                 defaultType: 'checkboxfield',
-                // layout: 'hbox',
-                defaults: {
-                    flex: 3,
-                },
+                layout: 'hbox',
+                width: 500,
+                // defaults: {
+                //     flex: 3,
+                // },
 
                 items: [
                     {
                         boxLabel  : 'Include Production Support',
                         id        : 'includeP',
                         name      : 'includeP',
-                        padding: '0 10 0 0',                        
+                        padding: '0 20 0 0',                        
                         inputValue: 'p',
                         listeners: {
                             change: function(field, newValue, oldValue) {
@@ -91,8 +91,8 @@ Ext.define('CustomApp', {
                                     if (Ext.getCmp('includeD').getValue()) {
                                         Ext.getCmp('includeD').setValue(false);
                                     }
-                                    var promise = this._loadDefects();
-                                    Deft.Promise.all(promise).then({
+
+                                    var promise = this._loadDefects().then({
                                         success: function(defects) {
                                             console.log('defects loaded:',defects);
                                             this._defects = defects;
@@ -116,7 +116,7 @@ Ext.define('CustomApp', {
                         boxLabel  : 'Include All Defects',
                         id        : 'includeD',
                         name      : 'includeD',
-                        padding: '0 10 0 0',                        
+                        padding: '0 20 0 0',                        
                         inputValue: 'd',
                         listeners: {
                             change: function(field, newValue, oldValue) {
@@ -129,8 +129,7 @@ Ext.define('CustomApp', {
                                     if (Ext.getCmp('includeP').getValue()) {
                                         Ext.getCmp('includeP').setValue(false);
                                     }
-                                    var promise = this._loadDefects();
-                                    Deft.Promise.all(promise).then({
+                                    var promise = this._loadDefects().then({
                                         success: function(defects) {
                                             console.log('all defects loaded:',defects);
                                             this._defects = defects;
@@ -154,7 +153,7 @@ Ext.define('CustomApp', {
                         boxLabel  : 'Include TestSets',
                         id        : 'includeT',
                         name      : 'includeT',
-                        padding: '0 10 0 0',                        
+                        padding: '0 20 0 0',                        
                         inputValue: 't',
                         listeners: {
                             change: function(field, newValue, oldValue) {
@@ -165,8 +164,7 @@ Ext.define('CustomApp', {
                                 console.log('include testSets:', include);
 
 
-                                var promise = this._loadTestSets();
-                                Deft.Promise.all(promise).then({
+                                var promise = this._loadTestSets().then({
                                     success: function(testSets) {
                                         console.log('all `testSets loaded:', testSets);
                                         this._testSets = testSets;
@@ -277,8 +275,10 @@ Ext.define('CustomApp', {
 
         if (!filter || filter.length === 0) {
             return customFilters;
-        } else {
+        } else if (customFilters) {
             filter = customFilters.and(filter);
+        } else {
+            return filter;
         }
 
         console.log('final filter', filter);
@@ -426,6 +426,7 @@ Ext.define('CustomApp', {
             model = this.models[0],
             config = {
                 xtype: chartType,
+                height: 250,
                 enableStacking: !!stackField,
                 chartColors: [
                 "#FF8200", // $orange
